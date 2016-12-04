@@ -16,7 +16,8 @@ def run(sc):
             {"metadata.broker.list":"localhost:9092", 
                 "auto.offset.reset": "smallest"}) 
     lines = directKafkaStream.map(lambda tuple: tuple[1]) 
-    words = lines.flatMap(lambda line: line.split())
+    lines.persist()
+    wordTuples = lines.flatMap(lambda line: line.split())
     pairs = words.map(lambda word: (word, 1))
     wordCounts = pairs.reduceByKey(lambda x, y: x + y)
     wordCounts.pprint()

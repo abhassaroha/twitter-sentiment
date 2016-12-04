@@ -52,18 +52,7 @@ func closeProducer() {
 	producer.Close()
 }
 
-func main() {
-	var jsonConfig map[string]string
-	if data, err := ioutil.ReadFile("config.json"); err != nil {
-		fmt.Println("Error opening file", err)
-	} else {
-		json.Unmarshal(data, &jsonConfig)
-		fmt.Println(jsonConfig)
-	}
-
-	openProducer()
-	defer closeProducer()
-
+func openTwitterStream(jsonConfig map[string]string) *twitter.Stream {
 	config := oauth1.NewConfig(jsonConfig["cKey"], jsonConfig["cTok"])
 	token := oauth1.NewToken(jsonConfig["aKey"], jsonConfig["aTok"])
 	httpClient := config.Client(oauth1.NoContext, token)
@@ -83,7 +72,6 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("Created stream")
-	defer stream.Stop()
 
 	// create demultiplexer
 	demux := twitter.NewSwitchDemux()
@@ -103,6 +91,23 @@ func main() {
 	}
 	go demux.HandleChan(stream.Messages)
 	fmt.Println("Setup demux")
+	return stream
+}
+
+func main() {
+	var jsonConfig map[string]string
+	if data, err := ioutil.ReadFile("config.json"); err != nil {
+		fmt.Println("Error opening file", err)
+	} else {
+		json.Unmarshal(data, &jsonConfig)
+		fmt.Println(jsonConfig)
+	}
+
+	openProducer()
+	defer closeProducer()
+
+	stream := openTwitterStream(jsonConfig)
+	defer stream.Stop()
 
 	// Wait for SIGINT and SIGTERM (HIT CTRL-C)
 	ch := make(chan os.Signal)

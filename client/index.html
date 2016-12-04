@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>A wonderful world?</title>
+	<link rel="stylesheet" href="css/materialize.min.css">
+
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-animate.min.js"></script>
+	<script src="js/angular-aria.min.js"></script>
+	<script src="js/angular-messages.min.js"></script>
+	<!-- Angular Material Library -->
+	<script src="js/angular-material.min.js"></script>
+	<script src="js/svg-assets-cache.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</head>
+<body ng-controller="AppController">
+<div class="row">
+	<div class="col l4 offset-l1">
+		<table>
+			<thead>
+				<th>
+					Happy tweets!
+				</th>
+			</thead>
+			<tbody>
+				<tr ng-repeat="tweet in happyTweets">
+					<td>
+						{{tweet.msg}}			
+					</td>
+				</tr>	
+			</tbody>
+		</table>
+	</div>
+	<div class="col l4 offset-l2">
+		<table>
+			<thead>
+				<th>
+					 Sad tweets!
+				</th>
+			</thead>
+			<tbody>
+				<tr ng-repeat="tweet in sadTweets">
+					<td>
+						{{tweet.msg}}			
+					</td>
+				</tr>	
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>
